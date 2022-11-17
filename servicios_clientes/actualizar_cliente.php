@@ -48,6 +48,8 @@ try {
         if ($stmt->rowCount() < 1) {
             $response['error'] = true;
             $response['message'] = "El cliente con documento $documento no se encuentra registado.";
+
+            http_response_code(404);
             echo json_encode($response);
             return;
         }
@@ -75,11 +77,13 @@ try {
 
         $conn = null;
 
+        http_response_code(202);
         $response['error'] = false;
         $response['message'] = "Cliente con documento $documento actualizado correctamente";
     }
 
 } catch (PDOException $e) {
+    http_response_code(500);
     $response['error'] = true;
     $response['message'] = "Error al tratar de actualizar al cliente: " . $sql . "<br>" . $e->getMessage();
 }

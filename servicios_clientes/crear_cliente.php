@@ -2,6 +2,9 @@
 
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json; charset=utf-8');
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+header("Allow: GET, POST, OPTIONS, PUT, DELETE");
 include_once("../database/connection.php");
 
 $response = array();
@@ -69,15 +72,18 @@ try {
 
         $conn = null;
 
+        http_response_code(201);
         $response['error'] = false;
         $response['message'] = "Usuario registrado correctamente";
 
     } else { // FALTAN PARAMETROS
+        http_response_code(400);
         $response['error'] = false;
         $response['message'] = "Algunos parametros requeridos no se encuentran en la peticion";
     }
 
 } catch (PDOException $e) {
+    http_response_code(500);
     $response['error'] = true;
     $response['message'] = "Error al tratar de crear un nuevo usuario: " . $sql . "<br>" . $e->getMessage();
 }
