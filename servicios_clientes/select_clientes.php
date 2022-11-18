@@ -13,14 +13,12 @@ try {
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
-        http_response_code(200);
         $response['error'] = false;
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $response['data'][] = $row;
         }
     } else {
-        http_response_code(404);
         $response['error'] = true;
         $response['message'] = "No hay clientes registrados";
     }
@@ -28,7 +26,6 @@ try {
     $conn = null;
 
 } catch (PDOException $e) {
-    http_response_code(500);
     $response['error'] = true;
     $response['message'] = "Error al obtener clientes: " . $sql . "<br>" . $e->getMessage();
 }

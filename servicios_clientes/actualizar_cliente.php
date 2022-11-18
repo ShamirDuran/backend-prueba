@@ -2,6 +2,9 @@
 
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json; charset=utf-8');
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+header("Allow: GET, POST, OPTIONS, PUT, DELETE");
 include_once("../database/connection.php");
 
 $response = array();
@@ -49,14 +52,13 @@ try {
             $response['error'] = true;
             $response['message'] = "El cliente con documento $documento no se encuentra registado.";
 
-            http_response_code(404);
             echo json_encode($response);
             return;
         }
 
         $stmt = $conn->prepare("UPDATE clientes SET `documento`=:documento, `nombre`=:nombre, `apellido1`=:apellido1, `apellido2`=:apellido2,
                 `direccion`=:direccion, `telefono`=:telefono, `correo_electronico`=:correo_electronico, `ciudad`=:ciudad, `valor_cupo`=:valor_cupo,
-                `estado`=:estado, `condicion_pago_id`=:condicion_pago_id, `medio_pago_id`=:medio_pago_id
+                `estado`=:estado, `condicion_pago_id`=:condicion_pago_id, `medio_pago_id`=:medio_pago_id, `fecha_registro`='now()'
                  WHERE `id`=:id
              ");
 
@@ -77,13 +79,11 @@ try {
 
         $conn = null;
 
-        http_response_code(202);
         $response['error'] = false;
         $response['message'] = "Cliente con documento $documento actualizado correctamente";
     }
 
 } catch (PDOException $e) {
-    http_response_code(500);
     $response['error'] = true;
     $response['message'] = "Error al tratar de actualizar al cliente: " . $sql . "<br>" . $e->getMessage();
 }
